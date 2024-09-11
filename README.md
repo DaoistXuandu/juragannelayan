@@ -49,7 +49,7 @@ Django sangat mendukung pengembangan REST API dengan Django REST Framework (DRF)
 
 ---
 
-###**Mengapa model pada Django disebut sebagai ORM?**
+### **Mengapa model pada Django disebut sebagai ORM?**
 Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena Django menggunakan pendekatan ini untuk menghubungkan antara objek Python dengan database relasional. ORM memungkinkan pengembang untuk berinteraksi dengan database menggunakan objek-objek Python, tanpa harus menulis SQL secara langsung. Penjelasan lebih lengkap:
 
 a. Objek (Object): Dalam Django, model didefinisikan sebagai kelas Python. Setiap kelas model merepresentasikan tabel di database, dan setiap atribut di kelas tersebut merepresentasikan kolom dalam tabel.
