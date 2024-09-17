@@ -173,7 +173,11 @@ dimana pada sisi paling kiri merepresentasikan _link_ pada web dan sisi tengah n
 Lalu setelah step A, B dan C telah selesai kita dapat menjalankan aplikasi dengen menekan perintah `python manage.py runserver` yang mana akan menjalankan aplikasi kita pada _local_ komputer.
 
 ### **Mengakses keempat URL di poin 2 menggunakan Postman, membuat screenshot dari hasil akses URL pada Postman, dan menambahkannya ke dalam README.md.**
+Json
 ![plot](./image/json_all.png)
+Json - Id
 ![plot](./image/json_id.png)
+XML
 ![plot](./image/xml_all.png)
+XML - Id
 ![plot](./image/xml_id.png)
