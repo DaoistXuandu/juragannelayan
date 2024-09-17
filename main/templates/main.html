@@ -1,5 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <h1>Nama Aplikasi: {{app_name}}</h1>
 <h1>Nama: {{name}} </h1>
 <h1>Kelas: {{class}} </h1>
 
-<p></p>
+{% if not item_entry %}
+<p>Belum ada data ikan baru pada {{app_name}}</p>
+{% else %}
+<table>
+    <tr>
+        <th>Nama Ikan</th>
+        <th>Harga</th>
+        <th>Deskripsi</th>
+    </tr>
+
+    {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini
+    {% endcomment %}
+    {% for item in item_entry %}
+    <tr>
+        <td>{{item.name}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.description}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_item_entry' %}">
+    <button>Tambahkan Ikan Baru</button>
+</a>
+
+{% endblock content %}
