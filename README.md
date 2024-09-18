@@ -1,4 +1,4 @@
-URL KE PWS: https://raihan-akbar-juaragannelayan.pbp.cs.ui.ac.id/
+URL KE PWS: http://raihan-akbar-nelayanpastijuragan.pbp.cs.ui.ac.id/
 
 
 # Tugas 2
