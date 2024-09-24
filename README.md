@@ -124,17 +124,17 @@ id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 Lalu untuk memfasilitasi masukkan dari pengguna saya membuat suatu berkas bernama forms.py yang ditujukan sebagai tempat masukkan dan berkas yang mempermudah proses validasi dari masukkan.
 ```
 from django.forms import ModelForm
-from main.models import NelayanEntry
+from main.models import Product
 
-class NelayanEntryForm(ModelForm):
+class ProductForm(ModelForm):
     class Meta:
-        model = NelayanEntry
+        model = Product
         fields = ["name", "price", "description"]
 ```
 Lalu pada berkas views.py saya menambahkan suatu fungsi baru yang berisi perintah ketika laman dari form diakses, dimana didalamnya juga dilakukan proses verifikasi dan juga perubahan dalam database apabila data yang dimasukkan ada dan benar.
 ```
 def create_item_entry(request):
-    form = NelayanEntryForm(request.POST or None)
+    form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -152,11 +152,11 @@ Lalu pada laman folder saya membuat suatu kerangka html pada direktori templates
 B. Tambahkan 4 fungsi views baru untuk melihat objek yang sudah ditambahkan dalam format XML, JSON, XML by ID, dan JSON by ID.
 Untuk menyelesaikan ini pada berkas views.py untuk melihat object secara umum, saya mengakases semua data yang ada pada database dengan menggunakan perintah
 ```
-data = NelayanEntry.objects.all()
+data = Product.objects.all()
 ```
 dan untuk data yang memerlukan id saya melakukan pencarian data pada database dengan menggunkan perintah
 ```
-data = NelayanEntry.objects.filter(pk=id)
+data = Product.objects.filter(pk=id)
 ```
 lalu untuk menampilkan dalam bentuk json kita isi pada `content_type` pada httpResponse dengan `application/json` dan untuk XML dengan `application/xml`.
 
@@ -181,3 +181,90 @@ XML
 ![plot](./image/xml_all.png)
 XML - Id
 ![plot](./image/xml_id.png)
+
+# Tugas 4
+### **Apa perbedaan antara HttpResponseRedirect() dan redirect()**
+Dalam Django, HttpResponseRedirect() dan redirect() adalah dua cara yang digunakan untuk melakukan pengalihan (redirect) ke URL lain, namun keduanya memiliki perbedaan dalam fleksibilitas dan kemudahan penggunaan. HttpResponseRedirect() adalah sebuah class yang mengembalikan respon HTTP dengan kode status 302, yang menandakan pengalihan ke URL lain. Untuk menggunakannya, Anda harus secara eksplisit menentukan URL tujuan dalam bentuk string, sehingga memberikan kontrol penuh atas respon, tetapi membutuhkan lebih banyak upaya manual.
+
+Di sisi lain, redirect() adalah fungsi helper yang secara internal menggunakan HttpResponseRedirect(), tetapi lebih fleksibel. Fungsi ini dapat menerima berbagai jenis argumen, seperti URL, nama view, atau objek model, sehingga membuatnya lebih praktis dan bersih untuk digunakan. Karena fleksibilitas ini, redirect() lebih sering digunakan dalam praktik, sementara HttpResponseRedirect() lebih cocok ketika Anda memerlukan kontrol lebih lanjut atas respon HTTP.
+
+### **Jelaskan cara kerja penghubungan model Product dengan User!**
+Secara singkat cara penghubungan model Product dengan User adalah menambah suatu _attribute_ baru pada model Product yang mengindikasikan kepemilikan product pada suatu user, umumnya hal ini didapatkan dengan menggunakan suatu identitas unik dari user pada _attribute_ tersebut. Sehingga suatu product dengan lainnya dapat terdintifikasi milik user yang mana.
+
+### **Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.**
+Authentication dan authorization adalah dua konsep yang berbeda namun saling terkait dalam keamanan aplikasi web. Authentication (otentikasi) adalah proses untuk memverifikasi identitas pengguna, memastikan bahwa pengguna tersebut adalah siapa yang mereka klaim. Biasanya, ini dilakukan melalui login dengan memasukkan username dan password. Sedangkan authorization (otorisasi) adalah proses untuk menentukan apakah pengguna yang telah diotentikasi memiliki izin atau hak akses untuk melakukan tindakan tertentu atau mengakses sumber daya tertentu dalam aplikasi. Dengan kata lain, authentication memastikan siapa pengguna, sedangkan authorization menentukan apa yang boleh mereka lakukan.
+
+Ketika pengguna melakukan login, aplikasi pertama-tama melakukan authentication, yaitu memverifikasi kredensial login (username dan password) yang diberikan. Jika kredensial tersebut benar, pengguna dianggap terotentikasi, dan aplikasi biasanya akan membuat sesi untuk melacak status login pengguna. Setelah terotentikasi, aplikasi akan memeriksa izin-izin yang terkait dengan pengguna tersebut untuk mengatur akses ke fitur atau data tertentu, yaitu authorization.
+
+Dalam Django, authentication diimplementasikan melalui django.contrib.auth, yang menyediakan mekanisme untuk memverifikasi identitas pengguna menggunakan model User, serta menyediakan middleware untuk melacak status login pengguna melalui sesi atau token. Django juga menyediakan fungsi seperti login() dan logout() untuk menangani proses otentikasi. Untuk authorization, Django menggunakan sistem izin (permissions) yang memungkinkan pengaturan akses berdasarkan peran pengguna (seperti admin, staf, atau pengguna biasa). Django menyediakan dekorator seperti @login_required dan kelas PermissionRequiredMixin yang memudahkan pengembang membatasi akses ke view berdasarkan status otentikasi dan izin yang dimiliki pengguna.
+
+### **Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?**
+Django mengingat pengguna yang telah login dengan menggunakan session framework yang berbasis pada cookies. Saat pengguna berhasil login, Django membuat sesi unik untuk pengguna tersebut dan menyimpan ID sesi di server. ID sesi ini kemudian dikirim ke browser pengguna dalam bentuk cookie. Setiap kali pengguna mengirim permintaan ke server (misalnya membuka halaman baru), cookie yang berisi ID sesi dikirim kembali ke server. Django menggunakan ID sesi ini untuk mengambil informasi terkait pengguna yang sedang login dan mengaitkannya dengan sesi yang sesuai di server. Dengan cara ini, Django dapat "mengingat" siapa pengguna yang sedang berinteraksi dengan aplikasi tanpa perlu meminta login ulang untuk setiap permintaan.
+
+Selain untuk melacak sesi login pengguna, cookies memiliki banyak kegunaan lain di web. Cookies dapat digunakan untuk menyimpan preferensi pengguna, seperti bahasa yang dipilih, tema tampilan, atau barang-barang yang dimasukkan ke dalam keranjang belanja dalam aplikasi e-commerce. Cookies juga dapat digunakan untuk melacak aktivitas pengguna di seluruh halaman atau situs yang berbeda, yang berguna untuk analitik web atau personalisasi iklan.
+
+Namun, tidak semua cookies aman digunakan. Ada risiko keamanan yang terkait dengan penggunaan cookies, terutama yang disebut insecure cookies. Misalnya, jika cookies tidak dilindungi dengan baik, mereka dapat menjadi target serangan session hijacking, di mana pihak ketiga yang tidak sah dapat mencuri cookie dan mengakses akun pengguna. 
+
+### **Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).**
+
+A. Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna untuk mengakses aplikasi sebelumnya dengan lancar.
+
+Untuk melakukan hal ini saya membuat 3 fungsi baru pada berkas views.py yang mana masing - masing secara unik mengimplementasikan fungsi untuk registrasi, login dan logout. Untuk melakukan registrasi saya membuat fungsi `register` yang mana tersusun sebagai berikut
+```
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+```
+secara singkat fungsi ini melakukan pembuatan user apabila sang user melakukan permintaan dalam bentuk POST yang mana difasilitasi dengan menggunakan fungsi UserCreationForm yang mana mengakases dan menyusun form sehingga tersusun sesuai dengan format yang berlaku. Lalu dilakukan validasi dengan database melalui `form.is_valid()` yang mana digunakan untuk mendeteksi inkonsistensi permintaan dan format yang ada pada database dan apabila tidak ada permasalahan maka form akan disimpan dalam database.
+
+Untuk melakukan login saya membuat fungsi `login_user` yang mana tersusun sebagai berikut
+```
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+    else:
+        form = AuthenticationForm(request)
+    context = {'form': form}
+    return render(request, 'login.html', context)
+```
+dimana pada fungsi ini apabila user melakukan permintaan autentifikasi data yang ia miliki dengan data yang ada pada sistem melalui POST, maka sistem akan melakukan proses validasi melalui fungsi `AuthentificationForm(data=request)` dan juag `form.is_valid()` yang mana apabila memenuhi semua unsur kevalidan pada proses tersebut maka user akan diperbolehkan masuk melalui fungsi `login` dan menuju halaman utama serta dimulai session dari user dengan menggunakan sistem cookies
+
+untuk melakukan logout, saya membuat fungsi `logout_user` yang mana tersusun sebagai berikut
+```
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+dimana pada fungsi ini apabila fungsi ter-_trigger_ maka akan dilakukan proses logout melalui fungsi `logout` dan akan dialihkan pada halaman login serta penghapusan session dari pengguna.
+
+B. Membuat dua akun pengguna dengan masing-masing tiga dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun di lokal.
+
+Untuk mengerjakan hal ini saya pertama menggunakan fitur registrasi untuk membuat 2 akun berbeda yang masing - masing memiliki username unik dan password lalu masuk pada akun pertama menggunakan fitur login dengan memasukkan username dan password akun pertama lalu menggunaka fitur yang telah dibuat sebelumnya membuat 3 data dummy, lalu menekan tombol logout dan masuk pada akun kedua dengan memasukkan username dan password akun kedua, lalu menambahkan 3 buah data dummy seperti mekanisme yang dilakukan akun pertama dan logout pada kedua. 
+
+C. Menghubungkan model Product dengan User
+Untuk melakukan hal tersebut saya pertama tama menambahkan attribute baru pada model Product yakni user sebagai berikut
+```
+user = models.ForeignKey(User, on_delete=models.CASCADE)
+```
+dengan User berasal dari library `django.contrib.auth.models` lalu melakukan migrasi pada aplikasi yang ada. Setelah itu saya merubah perintah pada aplikasi utama dimana tidak lagi menampilkan semua data yang ada namun hanya menampilkan data dengan user yang sama dengan pengguna pemberi permintaan
+
+D. Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
+
+Untuk melakukan informasi pengguna pada context yang ada pada fungsi `show_main` saya menyisipkan satu informasi pengguna yakni username, lalu hal tersebut saya tampilkan pada tag `h5`. Lalu untuk penerapan _last login_ hal ini saya implementasikan dengan menggunakan _session based cookies_ yang mana untuk setiap pengguna yang login kita akan ciptakan suatu session unik yang mana disimpan dalam suatu cookies dengan nilai waktu terakhir pengguna login. Sehingga, selama ia tidak logout dari aplikasi kita bisa selalu mengetahui kapan terkahir kali dia login.
+

@@ -15,8 +15,6 @@
         <th>Deskripsi</th>
     </tr>
 
-    {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini
-    {% endcomment %}
     {% for item in item_entry %}
     <tr>
         <td>{{item.name}}</td>
@@ -32,5 +30,12 @@
 <a href="{% url 'main:create_item_entry' %}">
     <button>Tambahkan Ikan Baru</button>
 </a>
+<a href="{% url 'main:logout' %}">
+    <button>Logout</button>
+</a>
+
+<h5>Pengguna Sekarang: {{user}}</h5>
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
 
 {% endblock content %}
