@@ -268,3 +268,72 @@ D. Menampilkan detail informasi pengguna yang sedang logged in seperti username 
 
 Untuk melakukan informasi pengguna pada context yang ada pada fungsi `show_main` saya menyisipkan satu informasi pengguna yakni username, lalu hal tersebut saya tampilkan pada tag `h5`. Lalu untuk penerapan _last login_ hal ini saya implementasikan dengan menggunakan _session based cookies_ yang mana untuk setiap pengguna yang login kita akan ciptakan suatu session unik yang mana disimpan dalam suatu cookies dengan nilai waktu terakhir pengguna login. Sehingga, selama ia tidak logout dari aplikasi kita bisa selalu mengetahui kapan terkahir kali dia login.
 
+# Tugas 5
+### **Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!**
+
+Dalam kasus ini maka css akan bekerja dengan menerapkan perubahan dengan prioritas paling spesfik menuju paling general, semisal kita memiliki suatu elemen `span` yang mana terdapat pada suatu tag `div` maka prioritas css pertama berada pada css atau sifat pada elemen `span` baru ketika ada suatu sifat yang tidak ditemukan pada _styling_ `span` maka sifat _styling_ tersebut akan ditentukan oleh sifat _styling_ pada elemen `div`
+
+### **Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!**
+
+Hal ini dikarenakan penggguna mungkin saja mengakses aplikasi yang kita kembangkan menggunakan perangkat dengan jenis yang beragam. Sehingga, aplikasi yang kita kembangkan sebisa mungkin mengakomodasi perbedaan perangkat tersebut. Dimana, hal ini krusial terutama apabila kita mengembangkan suatu aplikasi kompleks yang mana memiliki ragam fitur yang mungkin saja memerlukan banyak sekali tombol untuk dapat digunakan. Sehingga apabila kita hanya merancang fitur untuk dapat terlihat hanya pada perangkat tertentu maka ada kemungkinan fitur yang kita kembangkan tidak tampak pada perangkat lain yang mana dapat membuat pengguna tidak dapat menggunakan fitur yang digunakan. Salah satu contoh aplikasi yang telah menerapkan konsep responsive design adalah situs pembelajaran PBP 2024 yakni https://pbp-fasilkom-ui.github.io dimana baik dalam lebar layar berapapun berbagai fitur utama masih dapat diakses, sedangkan contoh aplikasi yang tidak menerapkan konsep tersebut adalah situs code-printer https://code-printer-sigma.vercel.app/ yang mana saya buat untuk situs printing teks pada CPC 16 untuk divisi competitive programming. Dimana saya tidak menerapkan konsep tersebut dikarenakan website ini hanya digunakan pada saat perlombaan yang mana hanya bisa diakses dengan menggunakan laptop/komputer
+
+### **Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!**
+
+Margin merupakan wilayah diluar keliling yang mana menjadi _buffer_ suatu elemen dengan elemen lainnya, salah satu cara pada _styling_ css adalah dengan `margin: 10px;` yang mana bisa diisi oleh besaran berukuran _pixel_ dan akan berlaku margin untuk atas, samping kanan, kiri, dan bawah. Sedangkan border merupakan area keliling dari suatu elemen yang menjadi batas isi elemen dengan elemen lain, salah satu cara pada _styling_ css adalah dengan `border: 5px solid red;` dimana `5px` meyatakan lebar dari garis border, `solid` merupakan jenis dari garis yang digunakan yaitu garis lurus dan `red` merupakan warna dari border itu. Padding merupakan wilayah didalam keliling yang mana menjadi _buffer_ antara keliling dan isi pada elemen. Salah satu contoh implementasinya pada _styling_ css adalah dengan `padding: 20px` yang mana bisa diisi oleha besaran berukuran _pixel_ dan akan berlaku untuk padding atas, samping kanan, kiri dan bawah.
+
+### **Jelaskan konsep flex box dan grid layout beserta kegunaannya!**
+
+Flexbox merupakan suatu model tata letak himpunan elemen yang terletak pada suatu axis yakni antara secara horizontal maupun vertikal. Sedangkan grid merupakan suatu model tata letak dua dimensi yang memungkinkan kita membuat tata letak yang lebih kompleks, seperti susunan baris dan kolom yang mendetail. CSS Grid sangat fleksibel dan dapat digunakan untuk mendefinisikan tata letak elemen-elemen baik secara horizontal (baris) maupun vertikal (kolom) secara bersamaan. Flexbox dapat digunakan apabila elemen yang ingin diatur dilakukan secara linier (baris atau kolom) dan diperlukan kontrol yang fleksibel atas penyelarasan elemen di satu dimensi. Grid efektif digunakan saat tata letak memerlukan pengaturan yang lebih kompleks di dua dimensi (baris dan kolom) atau ketika dibutuhkan kontrol yang lebih presisi atas keseluruhan halaman.
+
+### **Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!**
+
+A. Implementasikan fungsi untuk menghapus dan mengedit product.
+Untuk melakukan hal ini saya pertama menambahkan fungsi `delete_product` dan juga `edit_product` pada berkas views.py yang mana pada fungsi `delete_product` berisi sebagai berikut:
+```
+def delete_product(request, id):
+    # Get product berdasarkan id
+    product = Product.objects.get(pk = id)
+    # Hapus mood
+    product.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
+```
+Dimana pertama - tama kita mencari product berdasarkan id yang diberikan, lalu melakukan query ke database dan menghapus product yang telah ditemukan tersebut. Lalu kita mengembalikan laman dengan data yang diberikan dari fungsi `show_main`. Adapun pada `edit_product` struktur yang ada saya implementasikan sebagai demikian
+```
+def edit_product(request, id):
+    # Get mood entry berdasarkan id
+    product = Product.objects.get(pk = id)
+
+    # Set mood entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+```
+Dimana pertama - tama kira mencari product dengan suatu id unik yang dicari, lalu kita membuat form yang mana berisikan sesuai dengan skema model yang ada. Lalu apabila isi dari form tersebut atau form tersebut terdefinisi seperti yang diinginkan maka perubahan form akan disimpan dan pengguna akan masuk ke lama utama dan mendapatkan data terbaru. Sedangkan jika tidak, atau pengguna belum selesai dalam mengubah isi _card_ maka laman akan mengembalikan halaman `edit_product` yang mana akan menjadi tempat pengguna mengubah data item mereka. 
+
+Lalu agar tiap operasi dapat melakukan query yang ada pada berkas views.py maka saya masing - masing membuat suatu jalur path ke masing - masing fungsi yang ada sehingga pengguna dapat mendapatkan apa atau hasil yang mereka kerjakan. Adapun implementasinya sebagai berikut:
+```
+path('delete/<uuid:id>', delete_product, name='delete_product')
+path('edit-product/<uuid:id>', edit_product, name='edit_product')
+```
+
+B. Kustomisasi halaman login, register, dan tambah product semenarik mungkin.
+Agar masing - masing halaman memiliki tampilan menarik, tiap berkas login, register dan juga tambah produk saya menambahkan tambahan css sebagai media untuk melakukan perubahan tampilan baik warna ukuran maupun posisi dari tiap elemen sehingga didapatkan hasil yang semenarik mungkin. Adapun saya menggunakan framework berupa tailwind.css sehingga tampilan yang saya inginkan dapat saya buat dengan waktu yang lebih cepat, sehingga pada tiap masing - masing `login.html` untuk laman login `register.html` untuk laman registrasi dan juga `create_item_entry.html` untuk menambah produk.
+
+C. Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar.
+Untuk mengimplementasikan hal ini pertama saya menyimpan suatu gambar pada folder static yang mana berisi gambar yang akan ditampilkan apabila tidak terdapat data yang ada. dan data ini terenkapsulasi dalam suatu `if` yang mana hanya akan ter-_trigger_ apabila tidak terdapat daya yang ada. Selain itu saya juga menambahkan suatu pesan bahwa belum ada item atau ikan yang ada pada aplikasi yang ada. 
+
+D. Jika sudah ada product yang tersimpan, halaman daftar product akan menampilkan detail setiap product dengan menggunakan card (tidak boleh sama persis dengan desain pada Tutorial!).
+Untuk melakukan hal ini maka setelah perintah `if` yang berisi pengkasusan apabila tidak ada data yang ada, saya menaruh suatu `else` yang mana berlawanan dengan `if` akan tertrigger apabila setidaknya terdapat suatu data pada sistem. Dimana apabila ada saya akan menampilkan suatu _card_ yang mana terdefinisi pada `card_item.html` dan akan mendapatkan data dari database yang ada. Lalu saya menggunakan template yang ada untuk menghias laman tersebut yang mana menggunakan framework tailwind. Lalu untuk membuat laman tidak sama persis dengan tutorial maka saya mengubah warna dari tampilan yang ada dimana sebelumnya berwarna `bg-indigo-100` menjadi `bg-violet-300`.
+
+E. Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
+Untuk mengaplikasikan hal ini, saya mengaplikasikan fungsi yang telah dibuat pada poin A, lalu pada masing - masing _card_ saya tambahkan suatu elemen berlogo pensil yang melambangkan perubahan atau _edit_ dan juga elemen berlogo tong sampah yang mana melambangkan penghapusan atau _delete_. Lalu pada masing - masing elemen, saya melakukan suatu _setup_ dimana apabila elemen tersebut ditekan maka akan menuju pada masing - masing fungsi url untuk edit dan juga delete. Sehingga dimungkinkan untuk perubahan atau penghapusan suatu elemen.
+
+F. Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
+Untuk melakukan hal tersebut saya membuat suatu berkas baru bernama `navbar.html` yang mana terletak pada folder templates yang berada pada root aplikasi. lalu saya membuat suatu struktur yang terbagi 2 kolom dimana kolom pertama berisi nama aplikasi dan kedua berisi tombol terkait login ataupun register apabila pengguna belum login, atau nama pengguna dan tombol logout apabila pengguna telah login pada aplikasi. Lalu agar didapatkan tampilan yang _responsive_ maka saya membuat 2 buah navbar utama yakni navbar yang bekerja hanya hingga lebar dari hp dan juga yang bekerja ketika lebarnya menyamai ipad ataupun laptop. Hal ini dimungkinkan dimana pada framework tailwind terdapat suatu perintah dalam nama kelas yang mana dapat mengklasifikasikan kapan suatu _styling_ dalam css berlaku. Sehingga dimungkinkan adanya elemen yang tampak pada saat lebar hp adapun yang tidak tampak.
