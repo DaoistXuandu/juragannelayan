@@ -337,3 +337,142 @@ Untuk mengaplikasikan hal ini, saya mengaplikasikan fungsi yang telah dibuat pad
 
 F. Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
 Untuk melakukan hal tersebut saya membuat suatu berkas baru bernama `navbar.html` yang mana terletak pada folder templates yang berada pada root aplikasi. lalu saya membuat suatu struktur yang terbagi 2 kolom dimana kolom pertama berisi nama aplikasi dan kedua berisi tombol terkait login ataupun register apabila pengguna belum login, atau nama pengguna dan tombol logout apabila pengguna telah login pada aplikasi. Lalu agar didapatkan tampilan yang _responsive_ maka saya membuat 2 buah navbar utama yakni navbar yang bekerja hanya hingga lebar dari hp dan juga yang bekerja ketika lebarnya menyamai ipad ataupun laptop. Hal ini dimungkinkan dimana pada framework tailwind terdapat suatu perintah dalam nama kelas yang mana dapat mengklasifikasikan kapan suatu _styling_ dalam css berlaku. Sehingga dimungkinkan adanya elemen yang tampak pada saat lebar hp adapun yang tidak tampak.
+
+# Tugas 6
+### **Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!**
+JavaScript memiliki peran yang sangat penting dalam pengembangan aplikasi web karena memungkinkan interaktivitas dan dinamisme pada halaman web. Sebagai bahasa pemrograman yang berjalan di sisi klien (client-side), JavaScript dapat memanipulasi elemen HTML dan CSS secara real-time tanpa perlu melakukan refresh halaman. Ini membuat pengalaman pengguna menjadi lebih responsif dan menyenangkan. Fitur-fitur seperti validasi form, animasi, hingga pengelolaan konten dinamis seperti penambahan item ke keranjang belanja di situs e-commerce dapat dilakukan langsung di browser pengguna, meningkatkan kecepatan dan efisiensi aplikasi web.
+
+Selain itu, JavaScript memungkinkan pengembangan aplikasi web yang lebih canggih melalui integrasi dengan API (Application Programming Interface) dan teknologi modern seperti AJAX (Asynchronous JavaScript and XML) untuk membuat halaman web dapat berkomunikasi dengan server secara asinkron. Hal ini memungkinkan aplikasi web untuk memuat data baru tanpa perlu memuat ulang seluruh halaman, seperti yang terlihat pada platform media sosial atau aplikasi email berbasis web. 
+
+### **Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?**
+Fungsi dari penggunaan await ketika menggunakan fetch() adalah untuk menunggu hasil dari operasi pengambilan data (fetch()) selesai sebelum melanjutkan eksekusi kode berikutnya. fetch() mengembalikan sebuah Promise, dan dengan await, kita dapat menunggu hingga Promise tersebut selesai (baik dengan berhasil atau gagal) dan mendapatkan hasilnya secara langsung (data respon atau error). Dengan kata lain, await memungkinkan kita untuk menulis kode asinkron yang tampak seperti kode sinkron, sehingga lebih mudah dibaca dan dipahami. Jika kita tidak menggunakan await dalam memanggil fetch(), maka fungsi tersebut akan terus berjalan tanpa menunggu fetch() selesai, dan fetch() akan mengembalikan sebuah Promise yang belum terselesaikan. Hal ini berarti bahwa kita tidak akan langsung mendapatkan data respon, melainkan hanya sebuah Promise.
+
+### **Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?**
+Decorator @csrf_exempt pada view di Django digunakan untuk menonaktifkan perlindungan CSRF (Cross-Site Request Forgery) pada view tertentu. CSRF adalah mekanisme keamanan yang memastikan bahwa permintaan POST ke server berasal dari sumber yang sah (biasanya dengan menggunakan token CSRF). Dalam aplikasi Django, semua permintaan POST secara default memerlukan token CSRF ini untuk mencegah serangan CSRF
+
+### **Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?**
+Pembersihan data input pengguna harus dilakukan di backend (server-side) meskipun bisa dilakukan di frontend karena alasan keamanan dan keandalan. Meskipun melakukan validasi atau pembersihan di frontend dapat membantu meningkatkan pengalaman pengguna dengan memberikan feedback instan, hanya mengandalkan frontend tidaklah cukup untuk melindungi aplikasi dari berbagai jenis ancaman.
+
+### **Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!**
+
+A.Ubahlah kode cards data mood agar dapat mendukung AJAX GET.
+untuk melakukan hal tersebut saya merubah kode ajax yang ada sebelumnya, dimana yang sebelumnya merupakan suatu if else didalam html menjadi suatu div dengan id saja
+```
+    <div id="item_entry_cards">
+        <!-- {{user}} -->
+    </div>
+```
+dimana hal ini dilakukan agar data yang di _fetch_ menggunakan perintah get secara asyncronous melalui api dapat secara bertahap merubah data yang ada. Selain itu pada baris script dibuat suatu struktur untuk menaruh data data tersebut sebagai demikian
+```
+<div class="relative break-inside-avoid">
+    <div class="absolute top-2 z-10 left-1/2 -translate-x-1/2 flex items-center -space-x-2">
+        <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+        <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+    </div>
+    <div class="relative top-5 bg-indigo-100 shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform rotate-1 hover:rotate-0 transition-transform duration-300">
+        <div class="bg-indigo-200 text-gray-800 p-4 rounded-t-lg border-b-2 border-indigo-300">
+            <h3 class="font-bold text-xl mb-2">${name}</h3>
+            <p class="text-gray-600">Rp ${item.fields.price}</p>
+        </div>
+        <div class="p-4">
+            <p class="font-semibold text-lg mb-2">Deskripsi</p>
+            <p class="text-gray-700 mb-2">
+                <span class="bg-[linear-gradient(to_bottom,transparent_0%,transparent_calc(100%_-_1px),#CDC1FF_calc(100%_-_1px))] bg-[length:100%_1.5rem] pb-1">${description}</span>
+            </p>
+        </div>
+    </div>
+    <div class="absolute top-0 -right-4 flex space-x-1">
+        <a href="/edit-mood/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+            </svg>
+        </a>
+        <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+        </a>
+    </div>
+</div>
+```
+dimana memungkin data yang telah diambil dari api dapat ditampilkan kepada pengguna
+
+B. Lakukan pengambilan data mood menggunakan AJAX GET. Pastikan bahwa data yang diambil hanyalah data milik pengguna yang logged-in.
+Untuk melakukan ini pertama saya mengubah fungsi show_json menjadi hanya menampilkan data pengguna tersebut
+```
+def show_json(request):
+    data = Product.objects.filter(user = request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+Lalu pada script di main.html saya membuat suatu fungsi asynchronous yang memanggil fungsi atau api ini
+```
+async function getItemEntries() {
+    return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+}
+```
+Lalu agar data dapat ditampilan kepada pengguna saya membuat suatu fungsi baru bernama refreshItemEntries yang mana akan merefresh div ber-id yang telah terdefinisi sebelumnya dan menambahkan suatu data sesuai dengan data yang diambil dari database.
+
+C. Buatlah sebuah tombol yang membuka sebuah modal dengan form untuk menambahkan mood.
+Menambahkan tombol berikut disebelah tombol add sebelumnya
+```
+<button data-modal-target="crudModal" data-modal-toggle="crudModal"
+    class="btn bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+    onclick="showModal();">
+    Tambah Ikan dengan AJAX
+</button>
+```
+
+D.  Buatlah fungsi view baru untuk menambahkan mood baru ke dalam basis data.
+```
+@csrf_exempt
+@require_POST
+def add_item_entry_ajax(request):
+    name = strip_tags(request.POST.get("name"))
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))
+    user = request.user
+
+    new_product = Product(
+        name=name, 
+        price=price,
+        description=description,
+        user=user
+    )
+    new_product.save()
+
+    return HttpResponse(b"CREATED", status=201)
+```
+Implementasi saya adalah dengan membuat fungsi bernama add_item_entry_ajax, yang mana akan menerima request, lalu pada request akan diambil data tentang user, nama produk yang user upload, harganya dan deskripsi produk tersebut. Lalu data - data tersebut akan disimpan ke database dan server akan mengembalikan suatu response dalam http
+
+E.  Buatlah path /create-ajax/ yang mengarah ke fungsi view yang baru kamu buat.
+```
+path('create-ajax', add_item_entry_ajax, name='create_ajax'),
+```
+Saya menambahkan url `create-ajax` yang mana bakal meneruskan fungsi add_item_entry_ajax pada views.py dan akan dipanggil sebagai create_ajax
+
+D.  Hubungkan form yang telah kamu buat di dalam modal kamu ke path /create-ajax/.
+Setalah membuat suatu modal yang sifatnya pop-up atau hanya akan keluar apabila tombol yang dibuat pada C ditekan, saya menambahkan script sebagai berikut
+```
+function addMoodEntry() {
+    fetch("{% url 'main:create_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#moodEntryForm')),
+    })
+        .then(response => {
+            if (response.ok) {
+                refreshItemEntries()
+                document.getElementById("moodEntryForm").reset();
+                document.getElementById("closeModalBtn").click();
+            }
+            else
+                alert("Ikan tidak berhasil ditambahkan")
+        })
+
+    return false;
+}
+```
+yang mana akan melakukan pemanggilan api create_ajax.
+
+E.  Lakukan refresh pada halaman utama secara asinkronus untuk menampilkan daftar mood terbaru tanpa reload halaman utama secara keseluruhan.
+Sebagaimana yang telah ditujunkan pada poin D setelah data berhasil terupdate saya melakukan refresh pada tabel berisi informasi yang saya inginkan, dimana hal ini dilakukan setelah data yang terhimpun pada api benar - benar telah didapatkan atau secara asynchronous.
+
