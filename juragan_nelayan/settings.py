@@ -25,7 +25,6 @@ DEBUG = False
 SECRET_KEY = 'django-insecure-4ns3$093f9x4hv(6@z+w+@g=o)%4c@qcuui@nt&92$jny*_+%n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "raihan-akbar-nelayanpastijuragan.pbp.cs.ui.ac.id", 'raihan-akbar-juaragannelayan.pbp.cs.ui.ac.id']
 
