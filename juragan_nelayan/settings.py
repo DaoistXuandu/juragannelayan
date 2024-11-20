@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-4ns3$093f9x4hv(6@z+w+@g=o)%4c@qcuui@nt&92$jny*_+%n
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "raihan-akbar-nelayanpastijuragan.pbp.cs.ui.ac.id", 'raihan-akbar-juaragannelayan.pbp.cs.ui.ac.id']
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "raihan-akbar-nelayanpastijuragan.pbp.cs.ui.ac.id", 'raihan-akbar-juaragannelayan.pbp.cs.ui.ac.id', "10.0.2.2"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'juragan_nelayan.urls'
@@ -130,3 +134,22 @@ else:
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+]

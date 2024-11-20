@@ -4,7 +4,7 @@ import datetime
 from django.shortcuts import render, redirect
 from main.forms import ProductForm
 from main.models import Product 
-from django.http import HttpResponse, HttpResponseRedirect 
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -14,8 +14,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
-
-
+import json
 
 def delete_product(request, id):
     # Get mood berdasarkan id
@@ -99,6 +98,23 @@ def create_item_entry(request):
     
     context = {'form': form }
     return render(request, "create_item_entry.html", context)
+
+@csrf_exempt
+def create_mood_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_mood = Product.objects.create(
+            user=request.user,
+            name=data["Name"],
+            price=int(data["Amount"]),
+            description=data["Description"]
+        )
+        new_mood.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
 @require_POST
